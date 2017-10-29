@@ -2,6 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+function Sort(props) {
+  return (
+    <button onClick={props.onClick}>
+      {props.order}
+    </button>
+  )
+}
+
 function Square(props) {
   // Replace the whole Square class with this function:
   return (
@@ -14,6 +22,7 @@ function Square(props) {
 class Board extends React.Component {
   renderSquare(i) {
     return <Square
+      key={i}
       value={this.props.squares[i]}
       onClick={() => this.props.onClick(i)}
     />;
@@ -29,7 +38,7 @@ class Board extends React.Component {
         squareList.push(this.renderSquare(i * 3 + j))
       }
       divList.push(
-        <div className="board-row">
+        <div className="board-row" key={i} >
           {squareList}
         </div>
       )
@@ -53,6 +62,7 @@ class Game extends React.Component {
       }],
       stepNumber: 0,
       xIsNext: true,
+      historyOrderAsc: true
     };
   }
 
@@ -82,12 +92,13 @@ class Game extends React.Component {
     });
   }
 
-  render() {
-    const history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+  handleOrder() {
+    this.setState({
+      historyOrderAsc: !this.state.historyOrderAsc
+    })
+  }
 
-    // can use short snippets
+  createMoves(history, order) {
     const moves = history.map((step, move) => {
       const location = move ?
         `location: (${Math.floor(step.location / 3 + 1)}, ${step.location % 3 + 1})` :
@@ -105,6 +116,13 @@ class Game extends React.Component {
         </li>
       );
     });
+    return order ? moves : moves.reverse();
+  }
+
+  render() {
+    const history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const winner = calculateWinner(current.squares);
 
     let status;
     if (winner) {
@@ -123,7 +141,10 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <div><Sort
+            order={this.state.historyOrderAsc ? '↑' : '↓'}
+            onClick={() => this.handleOrder()} /></div>
+          <ol>{this.createMoves(history, this.state.historyOrderAsc)}</ol>
         </div>
       </div>
     );
