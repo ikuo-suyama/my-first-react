@@ -48,6 +48,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        location: 0,
       }],
       stepNumber: 0,
       xIsNext: true,
@@ -66,6 +67,7 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{
         squares: squares,
+        location: i,
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -86,12 +88,16 @@ class Game extends React.Component {
 
     // can use short snippets
     const moves = history.map((step, move) => {
+      const location = move ?
+        `location: (${Math.floor(step.location / 3 + 1)}, ${step.location % 3 + 1})` :
+        '';
       const desc = move ?
-        'Go to move #' + move :
+        `Go to move #${move}` :
         'Go to game start';
       return (
         //It’s strongly recommended that you assign proper keys whenever you build dynamic lists.
         <li key={move}>
+          {location}
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
