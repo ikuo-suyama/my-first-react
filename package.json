@@ -12,5 +12,16 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ],
+    "sourceMaps": true,
+    "retainLines": true
   }
 }
