@@ -94,9 +94,11 @@ class Game extends React.Component {
       const desc = move ?
         `Go to move #${move}` :
         'Go to game start';
+      const forcus = move === this.state.stepNumber ?
+        'current-list-item' : ''
       return (
         //It’s strongly recommended that you assign proper keys whenever you build dynamic lists.
-        <li key={move}>
+        <li key={move} className={forcus}>
           {location}
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
